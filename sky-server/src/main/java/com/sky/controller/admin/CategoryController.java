@@ -43,11 +43,43 @@ public class CategoryController {
         categoryService.save(categoryDTO);
         return Result.success();
     }
+
+    /**
+     * 根据ID删除分类
+     * @param id
+     * @return
+     */
     @DeleteMapping
     @ApiOperation("删除分类")
     public Result deleteById(Long id){
         log.info("删除分类：{}",id);
         categoryService.deleteById(id);
+        return Result.success();
+    }
+
+    /**
+     * 修改分类
+     * @param categoryDTO
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("修改分类")
+    public Result update(@RequestBody CategoryDTO categoryDTO){
+        log.info("修改分类：{}",categoryDTO);
+        categoryService.update(categoryDTO);
+        return Result.success();
+    }
+
+    /**
+     * 启用禁用分类
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用禁用分类")
+    public Result startOrStop(@PathVariable Integer status,Long id){
+        categoryService.startOrStop(status,id);
         return Result.success();
     }
 }

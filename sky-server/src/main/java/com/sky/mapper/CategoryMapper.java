@@ -16,4 +16,6 @@ public interface CategoryMapper {
     void insert(Category category);
     @Delete("delete from category where id=#{id}")
     void deleteByID(Long id);
+
+    void update(Category category);
 }
