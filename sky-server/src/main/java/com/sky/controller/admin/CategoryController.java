@@ -6,6 +6,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,11 @@ public class CategoryController {
         categoryService.save(categoryDTO);
         return Result.success();
     }
-
+    @DeleteMapping
+    @ApiOperation("删除分类")
+    public Result deleteById(Long id){
+        log.info("删除分类：{}",id);
+        categoryService.deleteById(id);
+        return Result.success();
+    }
 }
