@@ -42,7 +42,9 @@ public class UserController {
         Map<String,Object> claims=new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID,user.getId());
         //为微信用户生成JWT令牌
-        String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
+        String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(),
+                jwtProperties.getUserTtl(),
+                claims);
         UserLoginVO userLoginVO = UserLoginVO.builder()
                 .id(user.getId())
                 .openid(user.getOpenid())
