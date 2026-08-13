@@ -33,7 +33,7 @@ public class SetmealController {
     @GetMapping("list")
     @ApiOperation("根据分类id查询套餐")
     public Result<List<Setmeal>> list(Long categoryId){
-        log.info("要查询的套餐id为：{}",categoryId);
+        log.info("要查询的套餐的分类id为：{}",categoryId);
         Setmeal setmeal = new Setmeal();
         setmeal.setCategoryId(categoryId);
         setmeal.setStatus(StatusConstant.ENABLE);
