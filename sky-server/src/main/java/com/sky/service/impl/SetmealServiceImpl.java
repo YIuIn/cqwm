@@ -39,49 +39,7 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealDishMapper setmealDishMapper;
     @Autowired
     private DishMapper dishMapper;
-    @Override
-    /**
-     * 根据分类id查询套餐
-     */
-    public List<SetmealVO> list(Long categoryId) {
-        //通过分类id获得套餐数据
-        List<SetmealVO> list=setmealMapper.list(categoryId,StatusConstant.ENABLE);
-        //定义集合存放分类下所有的套餐id
-        List<Long> ids=new ArrayList<>();
-        for(SetmealVO setmealVO:list){
-            Long id=setmealVO.getId();
-            ids.add(id);
-        }
-        //如果分类下套餐数为空直接返回空
-        if(ids.isEmpty()){
-            return null;
-        }
-        //定义map关联套餐id跟对应的菜品集合
-        Map<Long,List<SetmealDish>> map=new HashMap<>();
-        //获取套餐id集合对应的所有菜品
-        List<SetmealDish> setmealDishes= setmealDishMapper.getDishBySetmealIds(ids);
-        //遍历获取的菜品集合
-        for(SetmealDish setmealDish:setmealDishes){
-            //获取套餐对应菜品集合的主键
-            Long setmealId =setmealDish.getSetmealId();
-            //通过主键拿到已经被主键映射的菜品集合
-            List<SetmealDish> dishList=map.get(setmealId);
-            //如果菜品集合为空创建一个新集合将菜品存放进去
-            if(dishList==null){
-                dishList=new ArrayList<>();
-                map.put(setmealId,dishList);
-            }
-            //不为空则将菜品加入到菜品集合中
-            dishList.add(setmealDish);
-        }
-        //将菜品集合塞回VO
-        for(SetmealVO setmealVO:list){
-            setmealVO.setSetmealDishes(
-                    map.get(setmealVO.getId())
-            );
-        }
-        return list;
-    }
+
 
     @Override
     public List<DishItemVO> getDishItemById(Long id) {
@@ -211,6 +169,17 @@ public class SetmealServiceImpl implements SetmealService {
         setmeal.setStatus(status);
         setmeal.setId(id);
         setmealMapper.update(setmeal);
+    }
+
+    /**
+     * 根据分类id查询套餐
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Setmeal> list(Long categoryId) {
+        List<Setmeal> list = setmealMapper.list(categoryId,StatusConstant.ENABLE);
+        return list;
     }
 
 

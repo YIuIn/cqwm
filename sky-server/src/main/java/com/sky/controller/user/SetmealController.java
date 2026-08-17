@@ -32,12 +32,11 @@ public class SetmealController {
     @GetMapping("/list")
     @ApiOperation("根据分类id查询套餐")
     //@Cacheable(cacheNames = "setmealCache", key = "#categoryId")
-    public Result<List<SetmealVO>> list(@RequestParam Long categoryId){
+    public Result<List<Setmeal>> list(@RequestParam Long categoryId){
         log.info("要查询的套餐的分类id为：{}",categoryId);
-        List<SetmealVO> list = setmealService.list(categoryId);
+        List<Setmeal> list = setmealService.list(categoryId);
         return Result.success(list);
     }
-
     /**
      * 根据套餐id查询包含的菜品列表
      */

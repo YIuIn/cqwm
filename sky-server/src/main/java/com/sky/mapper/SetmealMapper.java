@@ -18,11 +18,7 @@ public interface SetmealMapper {
     @Select("select count(*) from setmeal where category_id=#{id}")
     Integer countByCategoryId(Long id);
 
-    /**
-     *动态条件查询套餐
-     * @return
-     */
-    List<SetmealVO> list(Long categoryId,Integer status);
+
 
     /**
      *根据套餐id查询菜品选项
@@ -69,4 +65,12 @@ public interface SetmealMapper {
     @AutoFill(value = OperationType.UPDATE)
     void update(Setmeal setmeal);
 
+    /**
+     * 根据分类id查询起售中的套餐
+     * @param categoryId
+     * @param status
+     * @return
+     */
+    @Select("select * from setmeal where category_id=#{categoryId} and status=#{status}")
+    List<Setmeal> list(Long categoryId, Integer status);
 }

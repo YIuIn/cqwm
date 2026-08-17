@@ -27,17 +27,7 @@
         </foreach>
     </delete>
 
-    <select id="list" parameterType="Setmeal" resultType="com.sky.vo.SetmealVO">
-        select * from setmeal
-        <where>
-            <if test="categoryId != null">
-                and category_id = #{categoryId}
-            </if>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-        </where>
-    </select>
+
     <select id="page" resultType="com.sky.vo.SetmealVO">
         select s.*,c.name categoryname from setmeal s left outer join category c on s.category_id=c.id
         <where>
