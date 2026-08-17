@@ -10,7 +10,7 @@ import com.sky.vo.SetmealVO;
 import java.util.List;
 
 public interface SetmealService {
-    List<Setmeal> list(Setmeal setmeal);
+    List<SetmealVO> list(Long categoryId);
 
     List<DishItemVO> getDishItemById(Long id);
 

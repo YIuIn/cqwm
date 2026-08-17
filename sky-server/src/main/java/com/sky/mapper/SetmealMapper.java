@@ -20,10 +20,9 @@ public interface SetmealMapper {
 
     /**
      *动态条件查询套餐
-     * @param setmeal
      * @return
      */
-    List<Setmeal> list(Setmeal setmeal);
+    List<SetmealVO> list(Long categoryId,Integer status);
 
     /**
      *根据套餐id查询菜品选项
@@ -49,11 +48,25 @@ public interface SetmealMapper {
     @AutoFill(value = OperationType.INSERT)
     void saveWithDish(Setmeal setmeal);
 
+    /**
+     * 根据id查询套餐
+     * @param id
+     * @return
+     */
     @Select("select * from setmeal where id=#{id}")
     Setmeal getById(Long id);
 
+    /**
+     * 批量删除套餐
+     * @param ids
+     */
     void deleteBatch(List<Long> ids);
 
+    /**
+     * 修改套餐
+     * @param setmeal
+     */
     @AutoFill(value = OperationType.UPDATE)
     void update(Setmeal setmeal);
+
 }

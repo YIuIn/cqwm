@@ -5,6 +5,7 @@ import com.sky.entity.Setmeal;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
 import com.sky.vo.DishItemVO;
+import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +29,12 @@ public class SetmealController {
      * @param categoryId
      * @return
      */
-    @GetMapping("list")
+    @GetMapping("/list")
     @ApiOperation("根据分类id查询套餐")
-    @Cacheable(cacheNames = "setmealCache", key = "#categoryId")
-    public Result<List<Setmeal>> list(Long categoryId){
+    //@Cacheable(cacheNames = "setmealCache", key = "#categoryId")
+    public Result<List<SetmealVO>> list(@RequestParam Long categoryId){
         log.info("要查询的套餐的分类id为：{}",categoryId);
-        Setmeal setmeal = new Setmeal();
-        setmeal.setCategoryId(categoryId);
-        setmeal.setStatus(StatusConstant.ENABLE);
-        List<Setmeal> list = setmealService.list(setmeal);
+        List<SetmealVO> list = setmealService.list(categoryId);
         return Result.success(list);
     }
 

@@ -25,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -38,8 +40,46 @@ public class SetmealServiceImpl implements SetmealService {
     @Autowired
     private DishMapper dishMapper;
     @Override
-    public List<Setmeal> list(Setmeal setmeal) {
-        List<Setmeal> list = setmealMapper.list(setmeal);
+    /**
+     * 根据分类id查询套餐
+     */
+    public List<SetmealVO> list(Long categoryId) {
+        //通过分类id获得套餐数据
+        List<SetmealVO> list=setmealMapper.list(categoryId,StatusConstant.ENABLE);
+        //定义集合存放分类下所有的套餐id
+        List<Long> ids=new ArrayList<>();
+        for(SetmealVO setmealVO:list){
+            Long id=setmealVO.getId();
+            ids.add(id);
+        }
+        //如果分类下套餐数为空直接返回空
+        if(ids.isEmpty()){
+            return null;
+        }
+        //定义map关联套餐id跟对应的菜品集合
+        Map<Long,List<SetmealDish>> map=new HashMap<>();
+        //获取套餐id集合对应的所有菜品
+        List<SetmealDish> setmealDishes= setmealDishMapper.getDishBySetmealIds(ids);
+        //遍历获取的菜品集合
+        for(SetmealDish setmealDish:setmealDishes){
+            //获取套餐对应菜品集合的主键
+            Long setmealId =setmealDish.getSetmealId();
+            //通过主键拿到已经被主键映射的菜品集合
+            List<SetmealDish> dishList=map.get(setmealId);
+            //如果菜品集合为空创建一个新集合将菜品存放进去
+            if(dishList==null){
+                dishList=new ArrayList<>();
+                map.put(setmealId,dishList);
+            }
+            //不为空则将菜品加入到菜品集合中
+            dishList.add(setmealDish);
+        }
+        //将菜品集合塞回VO
+        for(SetmealVO setmealVO:list){
+            setmealVO.setSetmealDishes(
+                    map.get(setmealVO.getId())
+            );
+        }
         return list;
     }
 
@@ -155,12 +195,12 @@ public class SetmealServiceImpl implements SetmealService {
             List<Long> ids =new ArrayList<>();
             for (SetmealDish setmealDish : setmealDishes) {
                 ids.add(setmealDish.getDishId());
-
             }
-            List<Dish> dishes=dishMapper.getByIds(ids);
-            if(ids==null||ids.size()==0){
+            if(ids.isEmpty()){
                 throw new SetmealEnableFailedException(MessageConstant.SETMEAL_NOT_HAVE_DISH);
             }
+            List<Dish> dishes=dishMapper.getByIds(ids);
+
             for(Dish dish:dishes) {
                 if (dish.getStatus() != StatusConstant.ENABLE) {
                     throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);

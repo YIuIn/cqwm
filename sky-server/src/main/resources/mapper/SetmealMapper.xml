@@ -27,12 +27,9 @@
         </foreach>
     </delete>
 
-    <select id="list" parameterType="Setmeal" resultType="Setmeal">
+    <select id="list" parameterType="Setmeal" resultType="com.sky.vo.SetmealVO">
         select * from setmeal
         <where>
-            <if test="name != null">
-                and name like concat('%',#{name},'%')
-            </if>
             <if test="categoryId != null">
                 and category_id = #{categoryId}
             </if>
