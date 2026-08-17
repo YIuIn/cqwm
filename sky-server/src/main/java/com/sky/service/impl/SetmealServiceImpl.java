@@ -107,7 +107,7 @@ public class SetmealServiceImpl implements SetmealService {
             Setmeal setmeal = setmealMapper.getById(id);
             if(setmeal!=null && setmeal.getStatus() == StatusConstant.ENABLE){
                 //当前菜品处于起售中不能删除
-                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
             }
         }
         //根据套餐id批量删除套餐
@@ -150,10 +150,12 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public void startOrStop(Integer status, Long id) {
         List<SetmealDish> setmealDishes = setmealDishMapper.getDishBySetmealId(id);
-        for(SetmealDish setmealDish: setmealDishes){
-            Dish dish=dishMapper.getById(setmealDish.getDishId());
-            if(dish.getStatus()!=StatusConstant.ENABLE){
-                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+        if(status==1) {
+            for (SetmealDish setmealDish : setmealDishes) {
+                Dish dish = dishMapper.getById(setmealDish.getDishId());
+                if (dish.getStatus() != StatusConstant.ENABLE) {
+                    throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                }
             }
         }
         Setmeal setmeal=new Setmeal();
