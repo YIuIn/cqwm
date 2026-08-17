@@ -73,8 +73,8 @@ public class SetmealServiceImpl implements SetmealService {
         Long setmealId= setmeal.getId();
         List<SetmealDish> dishes=setmealDTO.getSetmealDishes();
         if(dishes!=null&&dishes.size()>0) {
-            dishes.forEach(setmealDishe -> {
-                setmealDishe.setSetmealId(setmealId);
+            dishes.forEach(setmealDish -> {
+                setmealDish.setSetmealId(setmealId);
             });
             setmealDishMapper.insertBatch(dishes);
         }
@@ -150,7 +150,7 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public void startOrStop(Integer status, Long id) {
         List<SetmealDish> setmealDishes = setmealDishMapper.getDishBySetmealId(id);
-        if(status==1) {
+        if(status==StatusConstant.ENABLE) {
             for (SetmealDish setmealDish : setmealDishes) {
                 Dish dish = dishMapper.getById(setmealDish.getDishId());
                 if (dish.getStatus() != StatusConstant.ENABLE) {
