@@ -72,12 +72,12 @@ public class SetmealServiceImpl implements SetmealService {
         setmealMapper.saveWithDish(setmeal);
         Long setmealId= setmeal.getId();
         List<SetmealDish> dishes=setmealDTO.getSetmealDishes();
-        if(dishes!=null&&dishes.size()>0){
-            dishes.forEach(setmealDishes->{
-                setmealDishes.setSetmealId(setmealId);
+        if(dishes!=null&&dishes.size()>0) {
+            dishes.forEach(setmealDishe -> {
+                setmealDishe.setSetmealId(setmealId);
             });
+            setmealDishMapper.insertBatch(dishes);
         }
-        setmealDishMapper.insertBatch(dishes);
     }
 
     /**
@@ -107,7 +107,7 @@ public class SetmealServiceImpl implements SetmealService {
             Setmeal setmeal = setmealMapper.getById(id);
             if(setmeal!=null && setmeal.getStatus() == StatusConstant.ENABLE){
                 //当前菜品处于起售中不能删除
-                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
             }
         }
         //根据套餐id批量删除套餐
@@ -134,10 +134,12 @@ public class SetmealServiceImpl implements SetmealService {
         setmealDishMapper.deleteBySetmealIds(list);
         //插入修改后的数据
         List<SetmealDish> setmealDishes=setmealDTO.getSetmealDishes();
-        setmealDishes.forEach(setmealDish -> {
-            setmealDish.setSetmealId(setmealDTO.getId());
-        });
-        setmealDishMapper.insertBatch(setmealDishes);
+        if(setmealDishes!=null&&setmealDishes.size()>0) {
+            setmealDishes.forEach(setmealDish -> {
+                setmealDish.setSetmealId(setmealDTO.getId());
+            });
+            setmealDishMapper.insertBatch(setmealDishes);
+        }
     }
 
     /**
