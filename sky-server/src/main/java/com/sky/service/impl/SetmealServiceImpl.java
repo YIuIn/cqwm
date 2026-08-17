@@ -10,6 +10,7 @@ import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.SetmealEnableFailedException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
@@ -106,7 +107,7 @@ public class SetmealServiceImpl implements SetmealService {
         for(Long id:ids) {
             Setmeal setmeal = setmealMapper.getById(id);
             if(setmeal!=null && setmeal.getStatus() == StatusConstant.ENABLE){
-                //当前菜品处于起售中不能删除
+                //当前套餐处于起售中不能删除
                 throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
             }
         }
@@ -157,9 +158,12 @@ public class SetmealServiceImpl implements SetmealService {
 
             }
             List<Dish> dishes=dishMapper.getByIds(ids);
+            if(ids==null||ids.size()==0){
+                throw new SetmealEnableFailedException(MessageConstant.SETMEAL_NOT_HAVE_DISH);
+            }
             for(Dish dish:dishes) {
                 if (dish.getStatus() != StatusConstant.ENABLE) {
-                    throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                    throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
                 }
             }
         }
