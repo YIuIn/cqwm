@@ -1,7 +1,9 @@
 package com.sky.controller.admin;
 
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
-@RestController
+@RestController("adminDishController")
 @RequestMapping("/admin/dish")
 @Slf4j
 @Api(tags = "菜品相关接口")
@@ -85,7 +87,7 @@ public class DishController {
      */
     @PostMapping("/status/{status}")
     @ApiOperation("菜品起售停售")
-    public Result statOrStop(@PathVariable Integer status,Long id){
+    public Result startOrStop(@PathVariable Integer status,Long id){
         log.info("要修改的菜品id为：{}",id);
         dishService.startOrStop(status,id);
         //将所有菜品的缓存数据清除掉，所有以dish_开头的key
@@ -121,5 +123,20 @@ public class DishController {
         return Result.success();
     }
 
-
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/list")
+    @ApiOperation("根据分类id查询菜品")
+    public Result<List<DishVO>> list(Long categoryId) {
+        log.info("要查询的菜品的分类id为:{}", categoryId);
+        Dish dish = new Dish();
+        dish.setCategoryId(categoryId);
+        //查询的菜品要在起售中
+        dish.setStatus(StatusConstant.ENABLE);
+        List<DishVO> list = dishService.listWithFlavor(dish);
+        return Result.success(list);
+    }
 }

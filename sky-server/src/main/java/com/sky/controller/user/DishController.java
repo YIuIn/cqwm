@@ -45,12 +45,12 @@ public class DishController {
         if(list!=null&&list.size()!=0){
             return Result.success(list);
         }
-        //如果不存在,查询数据库，将查询到的数据保存到redis中
         Dish dish=new Dish();
         dish.setCategoryId(categoryId);
         //查询的菜品要在起售中
         dish.setStatus(StatusConstant.ENABLE);
         list = dishService.listWithFlavor(dish);
+        //如果不存在,查询数据库，将查询到的数据保存到redis中
         redisTemplate.opsForValue().set(key,list);
         return Result.success(list);
     }
