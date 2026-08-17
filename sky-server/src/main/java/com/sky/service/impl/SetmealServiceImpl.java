@@ -6,9 +6,11 @@ import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -32,6 +34,8 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealMapper setmealMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+    @Autowired
+    private DishMapper dishMapper;
     @Override
     public List<Setmeal> list(Setmeal setmeal) {
         List<Setmeal> list = setmealMapper.list(setmeal);
@@ -51,7 +55,7 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public PageResult page(SetmealPageQueryDTO setmealPageQueryDTO) {
         PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
-        Page<Setmeal> page=setmealMapper.page(setmealPageQueryDTO);
+        Page<SetmealVO> page=setmealMapper.page(setmealPageQueryDTO);
         return new PageResult(page.getTotal(),page.getResult());
     }
 
@@ -95,6 +99,7 @@ public class SetmealServiceImpl implements SetmealService {
      * 根据id批量删除套餐
      * @param ids
      */
+    @Transactional
     @Override
     public void deleteBatch(List<Long> ids) {
         //判断是否存在起售中的套餐
@@ -142,6 +147,13 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Override
     public void startOrStop(Integer status, Long id) {
+        List<SetmealDish> setmealDishes = setmealDishMapper.getDishBySetmealId(id);
+        for(SetmealDish setmealDish: setmealDishes){
+            Dish dish=dishMapper.getById(setmealDish.getDishId());
+            if(dish.getStatus()!=StatusConstant.ENABLE){
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+            }
+        }
         Setmeal setmeal=new Setmeal();
         setmeal.setStatus(status);
         setmeal.setId(id);
