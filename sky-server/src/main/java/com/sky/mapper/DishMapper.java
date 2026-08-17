@@ -73,4 +73,11 @@ public interface DishMapper {
     //菜品起售停售
     @Update("update dish set status=#{status} where id=#{id}")
     void startOrStop(Integer status, Long id);
+
+    /**
+     * 根据id集合批量查询菜品
+     * @param ids
+     * @return
+     */
+    List<Dish> getByIds(List<Long> ids);
 }

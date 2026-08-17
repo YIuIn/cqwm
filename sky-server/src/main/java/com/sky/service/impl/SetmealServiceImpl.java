@@ -151,8 +151,13 @@ public class SetmealServiceImpl implements SetmealService {
     public void startOrStop(Integer status, Long id) {
         List<SetmealDish> setmealDishes = setmealDishMapper.getDishBySetmealId(id);
         if(status==StatusConstant.ENABLE) {
+            List<Long> ids =new ArrayList<>();
             for (SetmealDish setmealDish : setmealDishes) {
-                Dish dish = dishMapper.getById(setmealDish.getDishId());
+                ids.add(setmealDish.getDishId());
+
+            }
+            List<Dish> dishes=dishMapper.getByIds(ids);
+            for(Dish dish:dishes) {
                 if (dish.getStatus() != StatusConstant.ENABLE) {
                     throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
                 }
