@@ -30,7 +30,8 @@ public class OrderController {
     @ApiOperation("历史订单查询")
     public Result<PageResult> page(OrdersPageQueryDTO ordersPageQueryDTO,Integer status){
         log.info("订单分页查询");
-        PageResult pageResult=orderService.page(ordersPageQueryDTO,status);
+        ordersPageQueryDTO.setStatus(status);
+        PageResult pageResult=orderService.page(ordersPageQueryDTO);
         return Result.success(pageResult);
     }
 
@@ -101,5 +102,28 @@ public class OrderController {
     }
 
 
+    /**
+     * 派送订单
+     *
+     * @return
+     */
+    @PutMapping("/delivery/{id}")
+    @ApiOperation("派送订单")
+    public Result delivery(@PathVariable("id") Long id) {
+        orderService.delivery(id);
+        return Result.success();
+    }
+
+    /**
+     * 完成订单
+     *
+     * @return
+     */
+    @PutMapping("/complete/{id}")
+    @ApiOperation("完成订单")
+    public Result complete(@PathVariable("id") Long id) {
+        orderService.complete(id);
+        return Result.success();
+    }
 
 }
