@@ -1,4 +1,4 @@
-  sky:
+sky:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     host: localhost
@@ -32,6 +32,6 @@
 
 
   shop:
-    add: 广东省东莞市松山湖科技产业园区新城大道2号
+    address: 广东省东莞市松山湖科技产业园区新城大道2号
   baidu:
     ak: ${BAIDU_MAP_AK}

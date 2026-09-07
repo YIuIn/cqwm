@@ -52,6 +52,6 @@ public interface OrderMapper {
     @Select("select count(id) from orders where status=#{status}")
     Integer countStatus(Integer status);
 
-    @Select("select * from orders where status=#{} and order_time<#{ordertime}")
+    @Select("select * from orders where status=#{status} and order_time<#{ordertime}")
     List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime ordertime);
 }
